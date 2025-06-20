@@ -49,7 +49,7 @@ export const onAuthenticateUser = async () => {
 
         return { status: 400 };
     } catch (error) {
-        console.log('Error', error);
+        console.log('🔴 Error', error);
         return { status: 500, error: 'Internal Server Error' };
     }
 };
