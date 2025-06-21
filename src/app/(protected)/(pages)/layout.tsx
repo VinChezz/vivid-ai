@@ -2,7 +2,12 @@ export const dynamic = 'force-dynamic';
 import { getRecentProjects } from '@/actions/project';
 import { onAuthenticateUser } from '@/actions/user';
 import AppSideBar from '@/components/global/app-sidebar';
-import { Sidebar, SidebarProvider } from '@/components/ui/sidebar';
+import UpperInfoBar from '@/components/global/upper-info-bar';
+import {
+    Sidebar,
+    SidebarInset,
+    SidebarProvider,
+} from '@/components/ui/sidebar';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
@@ -22,6 +27,11 @@ const Layout = async ({ children }: Props) => {
                 recentProjects={recentProjects.data || []}
                 user={checkUser.user}
             />
+
+            <SidebarInset>
+                <UpperInfoBar user={checkUser.user} />
+                {children}
+            </SidebarInset>
         </SidebarProvider>
     );
 };
