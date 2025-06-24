@@ -4,7 +4,6 @@ import { Separator } from '@radix-ui/react-separator';
 import React from 'react';
 
 import SearchBar from './upper-info-searchbar';
-// import NewProjectButton from './new-project-button';
 import { User } from '@prisma/client';
 import ThemeSwitcher from '../mode-toogle';
 import { Upload } from 'lucide-react';
