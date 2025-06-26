@@ -4,11 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CreatePage from './CreatePage/CreatePage';
 import { useRouter } from 'next/navigation';
 import usePromptStore from '@/store/usePromptStore';
-// import CreateAI from './GenerateAi/CreativeAI';
-// import ScratchPage from './Scratch/ScratchPage';
 import { useEffect } from 'react';
 import React from 'react';
-import CreativeAI from './GenerateAI/CreativeAI';
+import CreateAI from './GenerateAI/CreativeAI';
 import ScratchPage from './Scratch/ScratchPage';
 
 const RenderPage = () => {
@@ -38,7 +36,7 @@ const RenderPage = () => {
             case 'create':
                 return <CreatePage onSelectOption={handleSelectOption} />;
             case 'creative-ai':
-                return <CreativeAI />;
+                return <CreateAI onBack={handleBack} />;
             case 'create-scratch':
                 return <ScratchPage />;
             default:
