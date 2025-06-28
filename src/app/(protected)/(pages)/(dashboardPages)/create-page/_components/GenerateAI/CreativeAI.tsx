@@ -140,7 +140,7 @@ const CreateAI = ({ onBack }: Props) => {
 
             <div className="w-full flex justify-center items-center">
                 <Button
-                    className="font-medium text-lg flex gap-2 items-center bg-green-600"
+                    className="font-medium text-lg flex gap-2 items-center bg-primary-80"
                     onClick={generateOutline}
                     disabled={isGenerating}
                     variant={'ghost'}
@@ -150,7 +150,9 @@ const CreateAI = ({ onBack }: Props) => {
                             <Loader2 className="animate-spin mr-2" />
                         </>
                     ) : (
-                        'Generate Outline'
+                        <span className="font-semibold border-collapse text-vivid">
+                            Generate Outline
+                        </span>
                     )}
                 </Button>
             </div>
