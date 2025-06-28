@@ -91,6 +91,9 @@ const Card = ({
                                 >
                                     {card.order}
                                 </span>
+                                <span className="text-base sm:text-lg">
+                                    {card.title}
+                                </span>
                             </div>
                         )}
                         <Button

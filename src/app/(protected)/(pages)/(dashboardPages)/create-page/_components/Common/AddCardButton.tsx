@@ -6,15 +6,16 @@ import { Plus } from 'lucide-react';
 interface AddCardButtonProps {
     onAddCard: () => void;
 }
+
 const AddCardButton = ({ onAddCard }: AddCardButtonProps) => {
     const [showGap, setShowGap] = useState(false);
 
     return (
         <motion.div
-            className="w-full relative overflow-hidden"
-            initial={{ height: '0.5 rem' }}
+            className="w-full relative"
+            initial={{ height: '0.75rem' }}
             animate={{
-                height: showGap ? '2rem' : '0.5rem',
+                height: showGap ? '2.5rem' : '0.75rem',
                 transition: { duration: 0.3, ease: 'easeInOut' },
             }}
             onHoverStart={() => setShowGap(true)}
@@ -26,20 +27,22 @@ const AddCardButton = ({ onAddCard }: AddCardButtonProps) => {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2, delay: 0.1 }}
+                        transition={{ duration: 0.2 }}
                         className="absolute inset-0 flex items-center justify-center"
                     >
-                        <div className="w-[40%] h-[1px] bg-primary">
+                        <div className="flex items-center w-full gap-3 px-4">
+                            <div className="flex-grow h-[1px] bg-muted" />
                             <Button
-                                variant="outline"
+                                variant="default"
                                 size="sm"
-                                className="rounded-full h-8 w-8 p-0 bg-primary hover:bg-primary"
+                                className="group rounded-full h-8 w-8 p-0 bg-white hover:bg-muted"
                                 onClick={onAddCard}
                                 aria-label="Add new card"
                             >
-                                <Plus className="h-4 w-4 text-black" />
+                                <Plus className="h-4 w-4 text-black group-hover:text-white transition-colors" />
                             </Button>
-                            <div className="w-[40%] h-[1px] bg-primary" />
+
+                            <div className="flex-grow h-[1px] bg-muted" />
                         </div>
                     </motion.div>
                 )}

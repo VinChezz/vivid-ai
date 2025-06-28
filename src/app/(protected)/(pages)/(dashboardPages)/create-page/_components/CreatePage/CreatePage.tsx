@@ -7,8 +7,8 @@ import {
 } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import usePromptStore from '@/store/usePromptStore';
-import RecentPrompts from '../GenerateAI/RecentPrompts';
 import { useEffect } from 'react';
+import { RecentPrompts } from '../GenerateAI/RecentPrompts';
 
 interface CourseSelectionProps {
     onSelectOption: (option: string) => void;
@@ -110,7 +110,4 @@ export default function CreatePage({ onSelectOption }: CourseSelectionProps) {
             {prompts?.length > 0 && <RecentPrompts />}
         </motion.div>
     );
-}
-function setPage(arg0: string) {
-    throw new Error('Function not implemented.');
 }

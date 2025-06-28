@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import useCreativeAIStore from '@/store/useCreativeAIStore';
 
-const RecentPrompts = () => {
+export const RecentPrompts = () => {
     const { prompts, setPage } = usePromptStore();
 
     const handleEdit = (id: string) => {
@@ -70,12 +70,3 @@ const RecentPrompts = () => {
         </motion.div>
     );
 };
-
-export default RecentPrompts;
-function addMultipleOutlines(outlines: unknown) {
-    throw new Error('Function not implemented.');
-}
-
-function setCurrentAiPrompt(title: string) {
-    throw new Error('Function not implemented.');
-}

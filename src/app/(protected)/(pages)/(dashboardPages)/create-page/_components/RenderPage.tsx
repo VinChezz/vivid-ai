@@ -38,7 +38,7 @@ const RenderPage = () => {
             case 'creative-ai':
                 return <CreateAI onBack={handleBack} />;
             case 'create-scratch':
-                return <ScratchPage />;
+                return <ScratchPage onBack={handleBack} />;
             default:
                 return null;
         }
