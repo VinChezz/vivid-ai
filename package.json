@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.3.22",
+    "@ai-sdk/react": "^1.2.12",
     "@clerk/nextjs": "^6.22.0",
     "@clerk/themes": "2.2.2",
     "@hookform/resolvers": "^5.1.1",
@@ -41,6 +43,7 @@
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@uploadcare/upload-client": "6.14.2",
+    "ai": "^4.3.16",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -67,7 +70,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "11.0.3",
     "vaul": "^1.1.2",
-    "zod": "^3.25.67",
+    "zod": "^3.25.68",
     "zustand": "5.0.2"
   },
   "devDependencies": {
