@@ -10,11 +10,10 @@ import useCreativeAIStore from '@/store/useCreativeAIStore';
 
 export const RecentPrompts = () => {
     const { prompts, setPage } = usePromptStore();
+    const { addMultipleOutlines, setCurrentAiPrompt } = useCreativeAIStore();
 
     const handleEdit = (id: string) => {
         const prompt = prompts.find((prompt) => prompt?.id === id);
-        const { addMultipleOutlines, setCurrentAiPrompt } =
-            useCreativeAIStore();
 
         if (prompt) {
             setPage('creative-ai');
@@ -40,7 +39,7 @@ export const RecentPrompts = () => {
                 className="space-y-2 w-full lg:max-w-[80%] mx-auto"
             >
                 {prompts.map((prompt, i) => (
-                    <motion.div variants={itemVariants}>
+                    <motion.div key={i} variants={itemVariants}>
                         <Card className="p-4 flex items-center justify-between hover:ng-accent/50 transition-colors duration-300">
                             <div className="max-w-[70%]">
                                 <h3 className="font-semibold text-xl line-clamp-1">
