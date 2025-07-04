@@ -3,6 +3,7 @@
 import { client } from '@/lib/prisma';
 import { onAuthenticateUser } from './user';
 import { OutlineCard } from '@/lib/types';
+import { JsonValue } from '@prisma/client/runtime/library';
 
 export const createProject = async (title: string, outlines: OutlineCard[]) => {
     try {
@@ -161,6 +162,98 @@ export const deleteProject = async (projectId: string) => {
         return { status: 200, data: updatedProject };
     } catch (error) {
         console.log('🔴 ERROR', error);
+        return { status: 500, error: 'Internal server error' };
+    }
+};
+
+export const getProjectById = async (projectId: string) => {
+    try {
+        console.log('Fetching project with ID:', projectId);
+        const checkUser = await onAuthenticateUser();
+
+        if (checkUser.status !== 200 || !checkUser.user) {
+            return { status: 403, error: 'User not authenticated' };
+        }
+
+        // Fetch the project by ID
+        const project = await client.project.findFirst({
+            where: {
+                id: projectId,
+            },
+        });
+
+        if (!project) {
+            return { status: 404, error: 'Project not found' };
+        }
+
+        return { status: 200, data: project };
+    } catch (error) {
+        console.error('🔴 ERROR', error);
+        return { status: 500, error: 'Internal server error' };
+    }
+};
+
+export const updateSlides = async (projectId: string, slides: JsonValue) => {
+    try {
+        // console.log("Updating slides for project with ID:", projectId);
+        // console.log("Slides:", slides);
+
+        // Validate input
+        if (!projectId || !slides) {
+            return {
+                status: 400,
+                error: 'Project ID and slides are required.',
+            };
+        }
+
+        // Update the project with the new slides
+        const updatedProject = await client.project.update({
+            where: {
+                id: projectId,
+            },
+            data: {
+                slides,
+            },
+        });
+
+        if (!updatedProject) {
+            return { status: 500, error: 'Failed to update slides' };
+        }
+
+        return { status: 200, data: updatedProject };
+    } catch (error) {
+        console.error('🔴 ERROR', error);
+        return { status: 500, error: 'Internal server error' };
+    }
+};
+
+export const updateTheme = async (projectId: string, theme: string) => {
+    try {
+        // Validate input
+        if (!projectId || !theme) {
+            return {
+                status: 400,
+                error: 'Project ID and slides are required.',
+            };
+        }
+
+        // Update the project with the new slides
+        const updatedProject = await client.project.update({
+            where: {
+                id: projectId,
+            },
+            data: {
+                themeName: theme,
+            },
+        });
+
+        if (!updatedProject) {
+            return { status: 500, error: 'Failed to update slides' };
+        }
+
+        return { status: 200, data: updatedProject };
+    } catch (error) {
+        console.error('🔴 ERROR', error);
         return { status: 500, error: 'Internal server error' };
     }
 };
