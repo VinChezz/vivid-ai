@@ -53,3 +53,36 @@ export const onAuthenticateUser = async () => {
         return { status: 500, error: 'Internal Server Error' };
     }
 };
+
+export const addLemonSqueezyApiKey = async (
+    apiKey: string,
+    storeId: string,
+    webhookSecret: string,
+) => {
+    try {
+        const user = await currentUser();
+        if (!user) {
+            return { status: 403 };
+        }
+
+        const updateUser = await client.user.update({
+            where: {
+                clerkId: user.id,
+            },
+
+            data: {
+                lemonSqueezyApiKey: apiKey,
+                storeId: storeId,
+                webhookSecret: webhookSecret,
+            },
+        });
+        if (!updateUser) {
+            return { status: 400, error: 'Unable to update user' };
+        }
+
+        return { status: 200, user: updateUser };
+    } catch (error) {
+        console.log('🔴 ERROR', error);
+        return { status: 500 };
+    }
+};
