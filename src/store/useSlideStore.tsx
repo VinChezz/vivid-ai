@@ -12,6 +12,7 @@ interface SlideState {
     setCurrentTheme: (theme: Theme) => void;
     currentSlide: number;
     setCurrentSlide: (index: number) => void;
+    getOrderedSlides: () => Slide[];
     resetSlideStore: () => void;
 }
 
@@ -27,7 +28,7 @@ const defaultTheme: Theme = {
 
 export const useSlideStore = create(
     persist<SlideState>(
-        (set) => ({
+        (set, get) => ({
             project: null,
             setProject: (project: Project) => set({ project }),
             slides: [],
@@ -36,6 +37,12 @@ export const useSlideStore = create(
             setCurrentTheme: (theme: Theme) => set({ currentTheme: theme }),
             currentSlide: 0,
             setCurrentSlide: (index) => set({ currentSlide: index }),
+            getOrderedSlides: () => {
+                const state = get();
+                return [...state.slides].sort(
+                    (a, b) => a.slideOrder - b.slideOrder,
+                );
+            },
             resetSlideStore: () => {
                 console.log('🟢 Resetting slide store');
                 set({
