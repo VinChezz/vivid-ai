@@ -6,6 +6,12 @@ export interface Slide {
     slideOrder: number;
     className?: string;
 }
+export interface LayoutSlides {
+    slideName: string;
+    content: ContentItem;
+    className?: string;
+    type: string;
+}
 
 export type ContentType =
     | 'column'
