@@ -6,8 +6,6 @@ import { useAnimation } from 'framer-motion';
 import { useSlideStore } from '@/store/useSlideStore';
 import { Theme } from '@/lib/types';
 import { themes } from '@/lib/constants';
-// import { ThemeCard } from './ThemeCard';
-// import { ThemePicker } from './ThemePicker';
 import { redirect, useParams, useRouter } from 'next/navigation';
 import ThemeCard from './ThemeCard';
 import ThemePicker from './ThemePicker';
