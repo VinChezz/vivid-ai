@@ -68,6 +68,8 @@ export const getAllProjects = async () => {
         if (projects.length === 0) {
             return { status: 404, error: 'No Projects Found' };
         }
+
+        return projects;
     } catch (error) {
         console.log('🔴 Error', error);
         return { status: 500, error: 'Internal Server Error' };
