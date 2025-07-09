@@ -1,5 +1,6 @@
 'use client';
 
+import { getRecentProjects } from '@/actions/project';
 import { Button } from '@/components/ui/button';
 import {
     SidebarGroup,
@@ -27,7 +28,6 @@ const RecentOpen = ({ recentProjects }: Props) => {
         if (!projectId || !slides) {
             toast('Project not found', {
                 description: 'Please try again',
-                // variant: 'destructive',
             });
             return;
         }
@@ -41,7 +41,7 @@ const RecentOpen = ({ recentProjects }: Props) => {
             <SidebarMenu>
                 {recentProjects.length > 0
                     ? recentProjects.map((item) => (
-                          <SidebarMenuItem>
+                          <SidebarMenuItem key={item.id}>
                               <SidebarMenuButton
                                   asChild
                                   tooltip={item.title}
