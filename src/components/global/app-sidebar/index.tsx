@@ -52,7 +52,7 @@ const AppSideBar = ({
             </SidebarHeader>
             <SidebarContent className="px-2 mt-10 gap-y-6">
                 <NavMain items={data.navMain} />
-                <RecentOpen recentProjects={[]} />
+                <RecentOpen recentProjects={recentProjects} />
             </SidebarContent>
             <SidebarFooter>
                 <NavFooter prismaUser={user} />
