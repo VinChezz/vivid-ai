@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useSlideStore } from '@/store/useSlideStore';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -73,7 +73,6 @@ const DraggableSlide: React.FC<DraggableSlideProps> = ({
         contentId: string,
         newContent: string | string[] | string[][],
     ) => {
-        console.log('Content changed', slide, contentId, newContent);
         if (isEditable) {
             updateContentItem(slide.id, contentId, newContent);
         }
@@ -208,12 +207,16 @@ const Editor: React.FC<EditorProps> = ({
         project,
     } = useSlideStore();
 
-    const orderedSlides = getOrderedSlides();
+    const [isMounted, setIsMounted] = useState(false);
+    const orderedSlides = isMounted ? getOrderedSlides() : [];
     const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const handleDelete = (id: string) => {
         if (isEditable) {
-            console.log('Deleting', id);
             removeSlide(id);
         }
     };
@@ -246,32 +249,25 @@ const Editor: React.FC<EditorProps> = ({
     };
 
     useEffect(() => {
-        if (slideRefs.current[currentSlide]) {
+        if (isMounted && slideRefs.current[currentSlide]) {
             slideRefs.current[currentSlide]?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
             });
         }
-    }, [currentSlide]);
+    }, [currentSlide, isMounted]);
 
-    // Autosave feature
     const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const saveSlides = useCallback(() => {
-        if (isEditable && project) {
-            console.log('Autosaving slides...');
-            // Implement your save logic here, e.g., API call or local storage
-            (async () => {
-                await updateSlides(
-                    project.id,
-                    JSON.parse(JSON.stringify(slides)),
-                );
-                // console.log("🟢 Slides saved successfully", res);
-            })();
+        if (isEditable && project && isMounted) {
+            updateSlides(project.id, JSON.parse(JSON.stringify(slides)));
         }
-    }, [isEditable, project, slides]);
+    }, [isEditable, project, slides, isMounted]);
 
     useEffect(() => {
+        if (!isMounted) return;
+
         if (autosaveTimeoutRef.current) {
             clearTimeout(autosaveTimeoutRef.current);
         }
@@ -279,7 +275,7 @@ const Editor: React.FC<EditorProps> = ({
         if (isEditable) {
             autosaveTimeoutRef.current = setTimeout(() => {
                 saveSlides();
-            }, 2000); // 2 seconds debounce
+            }, 2000);
         }
 
         return () => {
@@ -287,7 +283,19 @@ const Editor: React.FC<EditorProps> = ({
                 clearTimeout(autosaveTimeoutRef.current);
             }
         };
-    }, [slides, saveSlides, isEditable]);
+    }, [slides, saveSlides, isEditable, isMounted]);
+
+    if (!isMounted) {
+        return (
+            <div className="flex-1 flex flex-col h-full max-w-3xl mx-auto px-4 mb-20">
+                <ScrollArea className="flex-1 mt-8">
+                    <div className="px-4 pb-4 space-y-4 pt-2">
+                        <Skeleton className="h-52 w-full" />
+                    </div>
+                </ScrollArea>
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 flex flex-col h-full max-w-3xl mx-auto px-4 mb-20">

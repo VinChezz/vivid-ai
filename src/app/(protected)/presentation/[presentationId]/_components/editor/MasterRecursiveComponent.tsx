@@ -16,7 +16,7 @@ import { TableComponent } from '@/components/editor/components/TableComponent';
 import { ContentItem } from '@/lib/types';
 import { BlockQuote } from '@/components/editor/components/BlockQuote';
 import { TableOfContents } from '@/components/editor/components/TableOfContent';
-// import { CustomButton } from "@/components/editor/components/CustomComponent";
+import { CustomButton } from '@/components/editor/components/CustomComponent';
 import { CodeBlock } from '@/components/editor/components/Codeblock';
 import { CalloutBox } from '@/components/editor/components/CalloutBox';
 import {

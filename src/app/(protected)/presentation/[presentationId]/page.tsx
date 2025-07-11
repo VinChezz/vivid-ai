@@ -14,9 +14,18 @@ import { Slide } from '@/lib/types';
 import { generateImages } from '@/actions/openai';
 import Navbar from './_components/Navbar/Navbar';
 import LayoutPreview from './_components/editor-sidebar/leftsidebar/LayoutPreview';
-import Editor from './_components/editor/Editor';
+import EditorWrapper from './_components/editor/EditorWrapper';
+import dynamic from 'next/dynamic';
 
 type Props = {};
+
+const Editor = dynamic(
+    () =>
+        import(
+            '@/app/(protected)/presentation/[presentationId]/_components/editor/Editor'
+        ),
+    { ssr: false },
+);
 
 const Page = (props: Props) => {
     const { setSlides, setProject, slides, currentTheme, setCurrentTheme } =
@@ -158,7 +167,7 @@ const Page = (props: Props) => {
 
             const updateSlide = await updateSlides(
                 params.presentationId as string,
-                JSON.parse(JSON.stringify(updatedSlides.data)), // ✅ також тут
+                JSON.parse(JSON.stringify(updatedSlides.data)),
             );
 
             if (updateSlide.status === 200 && updateSlide.data) {

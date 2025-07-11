@@ -192,6 +192,7 @@ export const useSlideStore = create(
         }),
         {
             name: 'slides-storage',
+            skipHydration: true,
         },
     ),
 );

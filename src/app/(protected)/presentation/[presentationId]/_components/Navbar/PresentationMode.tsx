@@ -14,9 +14,16 @@ interface PresentationModeProps {
 const PresentationMode = ({ onClose }: PresentationModeProps) => {
     const { getOrderedSlides, currentTheme } = useSlideStore();
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-    const slides = getOrderedSlides();
+    const [isMounted, setIsMounted] = useState(false);
+    const slides = isMounted ? getOrderedSlides() : [];
 
     useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isMounted) return;
+
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 if (currentSlideIndex === slides.length - 1) {
@@ -35,7 +42,7 @@ const PresentationMode = ({ onClose }: PresentationModeProps) => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [slides.length, onClose, currentSlideIndex]);
+    }, [slides.length, onClose, currentSlideIndex, isMounted]);
 
     const goToNextSlide = () => {
         if (currentSlideIndex === slides.length - 1) {
@@ -53,6 +60,14 @@ const PresentationMode = ({ onClose }: PresentationModeProps) => {
 
     const isLastSlide = currentSlideIndex === slides.length - 1;
 
+    if (!isMounted) {
+        return (
+            <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
+                <div className="text-white">Loading presentation...</div>
+            </div>
+        );
+    }
+
     return (
         <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
             <div
@@ -64,29 +79,33 @@ const PresentationMode = ({ onClose }: PresentationModeProps) => {
                 }}
             >
                 <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentSlideIndex}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.2 }}
-                        transition={{ duration: 0.5 }}
-                        className={`w-full h-full pointer-events-none ${slides[currentSlideIndex].className}`}
-                        style={{
-                            backgroundColor: currentTheme.slideBackgroundColor,
-                            backgroundImage: currentTheme.gradientBackground,
-                            color: currentTheme.accentColor,
-                            fontFamily: currentTheme.fontFamily,
-                        }}
-                    >
-                        <MasterRecursiveComponent
-                            content={slides[currentSlideIndex].content}
-                            onContentChange={() => {}}
-                            slideId={slides[currentSlideIndex].id}
-                            isPreview={false}
-                            imageLoading={false}
-                            isEditable={false}
-                        />
-                    </motion.div>
+                    {slides[currentSlideIndex] && (
+                        <motion.div
+                            key={currentSlideIndex}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1.2 }}
+                            transition={{ duration: 0.5 }}
+                            className={`w-full h-full pointer-events-none ${slides[currentSlideIndex].className}`}
+                            style={{
+                                backgroundColor:
+                                    currentTheme.slideBackgroundColor,
+                                backgroundImage:
+                                    currentTheme.gradientBackground,
+                                color: currentTheme.accentColor,
+                                fontFamily: currentTheme.fontFamily,
+                            }}
+                        >
+                            <MasterRecursiveComponent
+                                content={slides[currentSlideIndex].content}
+                                onContentChange={() => {}}
+                                slideId={slides[currentSlideIndex].id}
+                                isPreview={false}
+                                imageLoading={false}
+                                isEditable={false}
+                            />
+                        </motion.div>
+                    )}
                 </AnimatePresence>
 
                 <Button
