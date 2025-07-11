@@ -61,7 +61,9 @@ const Page = (props: Props) => {
                 setTheme(findTheme?.type === 'dark' ? 'dark' : 'light');
                 setProject(res.data);
 
-                const slides = JSON.parse(JSON.stringify(res.data.slides));
+                const slides = res.data.slides
+                    ? JSON.parse(JSON.stringify(res.data.slides))
+                    : [];
 
                 if (res.data.slides && slides.length > 0) {
                     setSlides(slides);
