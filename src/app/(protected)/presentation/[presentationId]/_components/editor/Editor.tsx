@@ -39,6 +39,13 @@ const DraggableSlide: React.FC<DraggableSlideProps> = ({
     const { currentSlide, setCurrentSlide, currentTheme, updateContentItem } =
         useSlideStore();
 
+    console.log('Slide content:', {
+        id: slide.id,
+        type: slide.content.type,
+        content: slide.content.content,
+        isText: typeof slide.content.content === 'string',
+    });
+
     const [{ isDragging }, drag] = useDrag({
         type: 'SLIDE',
         item: { index, type: 'SLIDE' },
@@ -82,7 +89,7 @@ const DraggableSlide: React.FC<DraggableSlideProps> = ({
         <div
             ref={ref}
             className={cn(
-                'w-full rounded-lg shadow-lg relative p-0 min-h-[400px] max-h-[800px]',
+                'group w-full rounded-lg shadow-lg relative p-0 min-h-[400px] max-h-[800px]',
                 'shadow-xl transition-shadow duration-300',
                 'flex flex-col',
                 index === currentSlide
@@ -109,7 +116,10 @@ const DraggableSlide: React.FC<DraggableSlideProps> = ({
 
             {isEditable && (
                 <Popover>
-                    <PopoverTrigger asChild className="absolute top-2 left-2">
+                    <PopoverTrigger
+                        asChild
+                        className="absolute top-4 left-4 z-10 invisible group-hover:visible"
+                    >
                         <Button size="sm" variant="outline">
                             <EllipsisVertical className="w-5 h-5" />
                             <span className="sr-only">Slide options</span>
