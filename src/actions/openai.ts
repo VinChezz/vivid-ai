@@ -66,6 +66,52 @@ export const generateCreativePrompt = async (userPrompt: string) => {
     }
 };
 
+function normalizeContent(content: any) {
+    if (!content) {
+        return {
+            type: 'column',
+            content: [
+                {
+                    type: 'paragraph',
+                    content: '',
+                    placeholder: 'Start typing...',
+                },
+            ],
+        };
+    }
+
+    if (Array.isArray(content)) {
+        return {
+            type: 'column',
+            content: content.map((item) => ({
+                ...item,
+                type: item.type === 'text' ? 'paragraph' : item.type,
+            })),
+        };
+    }
+
+    if (content.content && Array.isArray(content.content)) {
+        return {
+            ...content,
+            content: content.content.map((item: { type: string }) => ({
+                ...item,
+                type: item.type === 'text' ? 'paragraph' : item.type,
+            })),
+        };
+    }
+
+    return {
+        type: 'column',
+        content: [
+            {
+                type: 'paragraph',
+                content: typeof content === 'string' ? content : '',
+                placeholder: 'Start typing...',
+            },
+        ],
+    };
+}
+
 export const generateImages = async (slides: any) => {
     try {
         console.log('🟢 Generating images for slides...');
@@ -86,10 +132,15 @@ export const generateImages = async (slides: any) => {
         }
 
         // Глибоке копіювання, щоб не мутувати оригінал
-        const slidesCopy: Slide[] = JSON.parse(JSON.stringify(slidesArray));
+        // const slidesCopy: Slide[] = JSON.parse(JSON.stringify(slidesArray));
+
+        const normalizedSlides = slidesArray.map((slide) => ({
+            ...slide,
+            content: normalizeContent(slide.content),
+        }));
 
         const processedSlides = await Promise.all(
-            slidesCopy.map(async (slide) => {
+            normalizedSlides.map(async (slide) => {
                 const updatedContent = await processSlideContent(slide.content);
                 return { ...slide, content: updatedContent };
             }),
@@ -106,23 +157,19 @@ export const generateImages = async (slides: any) => {
 const processSlideContent = async (
     content: ContentItem,
 ): Promise<ContentItem> => {
-    // Create a deep clone of the content structure
     const contentClone: ContentItem = JSON.parse(JSON.stringify(content));
-    const imageComponents = findImageComponents(contentClone);
 
-    // Process images in parallel while maintaining structure
+    const imageComponents = await findImageComponents(contentClone);
     await Promise.all(
-        (
-            await imageComponents
-        ).map(async (component) => {
+        imageComponents.map(async (component) => {
             try {
                 const newUrl = await generateImageUrl(
                     component.alt || 'Placeholder Image',
                 );
                 component.content = newUrl;
             } catch (error) {
-                console.error('🔴 Image generation failed:', error);
-                component.content = 'https://via.placeholder.com/1024';
+                console.error('Image generation failed:', error);
+                component.content = 'https://placehold.co/1024x768';
             }
         }),
     );
@@ -181,7 +228,7 @@ export const generateImageUrl = async (prompt: string): Promise<string> => {
 
         return uploadResult?.uuid
             ? `https://ucarecdn.com/${uploadResult.uuid}/-/preview/`
-            : 'https://via.placeholder.com/1024';
+            : 'https://placehold.co/1024x768';
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.data) {
             const errData = error.response.data;
@@ -195,6 +242,6 @@ export const generateImageUrl = async (prompt: string): Promise<string> => {
         } else {
             console.error('Failed to generate image:', error);
         }
-        return 'https://via.placeholder.com/1024';
+        return 'https://placehold.co/1024x768';
     }
 };
