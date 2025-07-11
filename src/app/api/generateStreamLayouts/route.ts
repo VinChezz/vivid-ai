@@ -30,14 +30,19 @@ Return valid JSON with an array of slides like this format:
   {
     "title": "Slide Title",
     "content": {
-      "type": "vertical",
+      "type": "column",
       "content": [
         {
-          "type": "text",
+          "type": "heading1",
+          "content": "Main Heading"
+        },
+        {
+          "type": "paragraph",
           "content": "Some description of the slide"
         },
         {
           "type": "image",
+          "content": "",
           "alt": "A relevant illustration"
         }
       ]
@@ -45,9 +50,18 @@ Return valid JSON with an array of slides like this format:
   }
 ]
 
+Important: Use only the following types for content:
+- For titles: "heading1", "heading2", "heading3", "heading4", "title"
+- For paragraphs: "paragraph"
+- For images: "image"
+- For vertical containers: "column"
+- For horizontal containers: "resizable-column"
+
+DO NOT use "text" or "vertical" types. Use "paragraph" for text content and "column" for vertical containers.
+
 ⚠️ DO NOT return any explanation, markdown, or extra text.
 Return ONLY the JSON array.
-        `.trim();
+`.trim();
 
         // 3. Викликаємо OpenRouter
         const response = await fetch(
